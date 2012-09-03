@@ -4,36 +4,127 @@
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1"> 
 
-  <title></title>
-  <meta name="description" content="">
-  <meta name="author" content="">
+  <title>Maaser</title>
+  <meta name="description" content="An app to help you tithe your income.">
+  <meta name="author" content="Adam Richeimer">
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <link rel="shortcut icon" href="/favicon.ico">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-  <link rel="stylesheet" href="css/style.css?v=2">
-
+  <!-- <link rel="stylesheet" href="css/style.css?v=2">-->
+<style>
+	.empty {
+		text-align: center;
+	}
+</style>
+  <link rel="stylesheet" href="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.css" />
+  <link rel="stylesheet" href="css/mobiscroll.core-2.0.css" />
+  <link rel="stylesheet" href="css/mobiscroll.jqm-2.0.css" />
+  <script>window.location.hash="";</script>
+  <script src="http://code.jquery.com/jquery-1.8.1.min.js"></script>
+  <script>window.jQuery || document.write('<script src="js/libs/jquery-1.7.2.min.js"><\/script>')</script>
+  <script src="http://code.jquery.com/mobile/1.1.1/jquery.mobile-1.1.1.min.js"></script>
+  <script src="js/libs/handlebars-1.0.0.beta.6.js"></script>
+  <script src="js/libs/ember-1.0.pre.js"></script>
+  <script src="js/libs/mobiscroll.core-2.0.js"></script>
+  <script src="js/libs/mobiscroll.datetime-2.0.js"></script>
+  <script src="js/libs/mobiscroll.jqm-2.0.js"></script>
+  <script src="js/libs/date.js"></script>
+  <script src="js/app.js"></script>
   <!--[if lt IE 9]>
   <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
 </head>
 <body>
-	<script type="text/x-handlebars">
-	      {{#each App.entriesController.content}}
-		  <li>{{this.name}} - {{this.amount}}</li>
-		  {{/each}}
-	</script>
 	
-	<script type="text/x-handlebars">
-	      We owe ${{App.entriesController.owed}}
-	</script>
+  <script type="text/x-handlebars" data-template-name="main">
 
-  <!-- The missing protocol means that it will match the current protocol, either http or https. If running locally, we use the local jQuery. -->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-  <script>window.jQuery || document.write('<script src="js/libs/jquery-1.7.2.min.js"><\/script>')</script>
-  <script src="js/libs/ember-0.9.8.1.js"></script>
-  <script src="js/app.js"></script>
+    {{#view App.MainHeaderView}}
+        <h1>My Finances</h1>
+		<a href="#add" data-icon="plus" data-theme="b" data-rel="dialog" data-transition="pop">Add Entry</a>
+		    <fieldset data-role="controlgroup" data-type="horizontal" class="ui-btn-right">
+		         	<input type="radio" name="radio-view" id="radio-view-a" checked value="all" {{action "filter" on="change"}} />
+		         	<label for="radio-view-a">All Time</label>
+		         	<input type="radio" name="radio-view" id="radio-view-b" value="year" {{action "filter" on="change"}} />
+		         	<label for="radio-view-b">This Year</label>
+		         	<input type="radio" name="radio-view" id="radio-view-c" value="month" {{action "filter" on="change"}} />
+		         	<label for="radio-view-c">This Month</label>
+		    </fieldset>
+    {{/view}}
+
+
+    {{#view App.ContentView}}
+      {{#collection App.ListView contentBinding="App.entriesController.entries"}}
+			{{#if view.content.isDate}}<h3 class="Date">{{view.content.name}}</h3>{{else}}
+			<a href="#" {{action "edit" context="view.content"}}>
+        	<h3 {{bindAttr data-date="content.dateString"}}>{{view.content.name}}</h3>
+			<p {{bindAttr class="content.category"}}><strong>Category: </strong>{{view.content.category}}</p>
+			<p><strong>Amount: </strong>{{view.content.amount}}</p>
+			</a>
+			<a href="#" {{action "delete" context="view.content"}}>Delete</a>
+			{{/if}}
+      {{/collection}}
+		
+    {{/view}}
+     
+
+    {{#view App.FooterView}}
+      <h3>We owe ${{App.entriesController.owed}} to charity.</h3>
+    {{/view}}
+
+  </script>
+	
+  <script type="text/x-handlebars" data-template-name="add">
+		<div data-role="header"><h1>Add Entry</h1></div> 
+			<div data-role="content">
+			
+			<label for="category">Category</label>
+			<select id="category" name="category">
+				<option>Income</option>
+				<option>Deductable</option>
+				<option>Charity</option>
+		    </select>
+		    <label for="name">Name</label>
+		    <input id="name" name="name" type="text" placeholder="Entry Name"/>
+		
+			<label for="amount">Amount</label>
+		    <input id="amount" name="amount" type="number" step="0.01" min="0" value="0.01"/>
+
+			<label for="Date">Date</label>
+		    <input id="date" class="datefield" name="date" type="text" value="now"/>
+		
+			<span data-role="button" data-theme="b" {{action "edit"}} >Add Entry</span>       
+			<a href="#main" data-role="button" data-theme="c">Cancel</a>
+		</div> 
+   </script>
+
+  <script type="text/x-handlebars" data-template-name="edit">
+	<div data-role="header"><h1>Edit Entry</h1></div> 
+		<div data-role="content" class="editbox">
+		
+		<label for="category">Category</label>
+		<select class="category" name="category">
+			<option {{bindAttr selected="content.isIncome"}}>Income</option>
+			<option {{bindAttr selected="content.isDeductable"}}>Deductable</option>
+			<option {{bindAttr selected="content.isCharity"}}>Charity</option>
+	    </select>
+	
+	    <label for="name">Name</label>
+	    <input class="name" name="name" type="text" {{bindAttr value="content.name"}}/>
+	
+		<label for="amount">Amount</label>
+	    <input class="amount" name="amount" type="number" step="0.01" min="0"  {{bindAttr value="content.amount"}}/>
+
+		<label for="Date">Date</label>
+	    <input class="date datefield" id="editdate" name="date" type="text"  {{bindAttr value="content.dateString"}}/>
+	
+		<span data-role="button" data-theme="b" {{action "edit" context="content"}} >Save changes</span>       
+		<a href="#main" data-role="button" data-theme="c">Cancel</a>
+	</div>
+   </script>
+
 </body>
 </html>
