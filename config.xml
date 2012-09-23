@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<widget xmlns     = "http://www.w3.org/ns/widgets"
+        xmlns:gap = "http://phonegap.com/ns/1.0"
+        id        = "com.adamricheimer.maaser"
+        version   = "0.0.3">
+    <name>Maaser</name>
+
+    <description>
+        An app to help you tithe your income.
+    </description>
+
+    <author href="http://adamricheimer.com" email="adamzr@gmail.com">
+        Adam Richeimer
+    </author>
+
+    <feature name="http://api.phonegap.com/1.0/device" />
+
+    <preference name="phonegap-version" value="2.0.0" />
+    <preference name="orientation"      value="default" />
+    <preference name="target-device"    value="universal" />
+    <preference name="fullscreen"       value="false" />
+
+    <icon src="icon.png" />
+    <icon src="36x36.png"   gap:platform="android"    gap:density="ldpi" />
+    <icon src="48x48.png"   gap:platform="android"    gap:density="mdpi" />
+    <icon src="apple-touch-icon-72x72-precomposed.png"   gap:platform="android"    gap:density="hdpi" />
+    <icon src="96x96.png"  gap:platform="android"    gap:density="xhdpi" />
+    <icon src="apple-touch-icon-57x57-precomposed.png" gap:platform="ios"        width="57" height="57" />
+    <icon src="apple-touch-icon-72x72-precomposed.png"            gap:platform="ios"        width="72" height="72" />
+    <icon src="apple-touch-icon-114x114-precomposed.png"         gap:platform="ios"        width="114" height="114" />
+    <icon src="48x48.png"  gap:platform="winphone" />
+
+</widget>

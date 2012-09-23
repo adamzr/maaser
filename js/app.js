@@ -286,6 +286,10 @@ App.MainView = App.PageView.extend({
 	elementId : 'main',
     didInsertElement: function() {
         $.mobile.changePage("#" + this.elementId);
+		if(!localStorage.seenUserBefore){
+			$("#aboutTrigger").click();
+			localStorage.seenUserBefore = true;
+		}
     }
 });
 
@@ -299,7 +303,7 @@ App.AddEntryDialogView = App.PageView.extend({
 		if(!addEntryDialogDateWidgetApplied){
 			$(function(){
 			    $('#date').scroller({
-			        preset: 'datetime',
+			        preset: 'date',
 			        theme: 'jqm',
 			        display: 'inline',
 			        mode: 'mixed'
@@ -320,7 +324,7 @@ App.EditEntryDialogView = App.PageView.extend({
     didInsertElement: function(element, elementId) {
 		var datefield = this.$(".datefield")
 	    datefield.scroller({
-	        preset: 'datetime',
+	        preset: 'date',
 	        theme: 'jqm',
 	        display: 'inline',
 	        mode: 'mixed'
@@ -342,14 +346,24 @@ App.EditEntryDialogView = App.PageView.extend({
     }
 });
 
-$(document).bind('mobileinit', function() {
-    $.mobile.touchOverflowEnabled = true;
+App.AboutDialogView = App.PageView.extend({
+    templateName:'about',
+    id: 'about-view',
+	elementId : 'about'
 });
 
 var timesRun = 0;
 
 $(document).bind('pagebeforecreate', function(){
 	console.log("pagebeforecreate");
+	
+	var aboutView = App.get('aboutView');
+
+    if (!aboutView) {
+        aboutView = App.AboutDialogView.create();
+        App.set('aboutView',aboutView);
+        aboutView.append();
+    }
 	
 	var addView = App.get('addView');
 
@@ -375,4 +389,8 @@ $(document).bind('pagebeforecreate', function(){
 		});
 	}
 
+});
+
+$(document).ready(function(){
+		
 });

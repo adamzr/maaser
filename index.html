@@ -14,24 +14,17 @@
 
   <link rel="shortcut icon" href="/favicon.ico">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-  <!-- <link rel="stylesheet" href="css/style.css?v=2">-->
-<style>
-	.empty {
-		text-align: center;
-	}
-</style>
-  <link rel="stylesheet" href="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.css" />
-  <link rel="stylesheet" href="css/mobiscroll.core-2.0.css" />
-  <link rel="stylesheet" href="css/mobiscroll.jqm-2.0.css" />
-  <script>window.location.hash="";</script>
-  <script src="http://code.jquery.com/jquery-1.8.1.min.js"></script>
-  <script>window.jQuery || document.write('<script src="js/libs/jquery-1.7.2.min.js"><\/script>')</script>
-  <script src="http://code.jquery.com/mobile/1.1.1/jquery.mobile-1.1.1.min.js"></script>
+
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/jquery.mobile-1.2.0-rc.2.min.css" />
+  <link rel="stylesheet" href="css/mobiscroll-2.0.2.custom.min.css" />
+
+  <script>window.location.hash="";</script><!-- Prevents direct links to hashes which are not possible as pages are dynamically added. -->
+  <script src="js/libs/jquery-1.8.1.min.js"></script>
+  <script src="js/libs/jquery.mobile-1.2.0-rc.2.min.js"></script>
   <script src="js/libs/handlebars-1.0.0.beta.6.js"></script>
-  <script src="js/libs/ember-1.0.pre.js"></script>
-  <script src="js/libs/mobiscroll.core-2.0.js"></script>
-  <script src="js/libs/mobiscroll.datetime-2.0.js"></script>
-  <script src="js/libs/mobiscroll.jqm-2.0.js"></script>
+  <script src="js/libs/ember-1.0.pre.min.js"></script>
+  <script src="js/libs/mobiscroll-2.0.2.custom.min.js"></script>
   <script src="js/libs/date.js"></script>
   <script src="js/app.js"></script>
   <!--[if lt IE 9]>
@@ -43,16 +36,16 @@
   <script type="text/x-handlebars" data-template-name="main">
 
     {{#view App.MainHeaderView}}
-        <h1>My Finances</h1>
-		<a href="#add" data-icon="plus" data-theme="b" data-rel="dialog" data-transition="pop">Add Entry</a>
-		    <fieldset data-role="controlgroup" data-type="horizontal" class="ui-btn-right">
-		         	<input type="radio" name="radio-view" id="radio-view-a" checked value="all" {{action "filter" on="change"}} />
-		         	<label for="radio-view-a">All Time</label>
-		         	<input type="radio" name="radio-view" id="radio-view-b" value="year" {{action "filter" on="change"}} />
-		         	<label for="radio-view-b">This Year</label>
-		         	<input type="radio" name="radio-view" id="radio-view-c" value="month" {{action "filter" on="change"}} />
-		         	<label for="radio-view-c">This Month</label>
-		    </fieldset>
+        <h1>Maaser</h1>
+		<a href="#add" data-icon="plus" data-theme="b" data-rel="dialog" data-transition="pop" data-mini="true">Add Entry</a>
+	    <fieldset data-role="controlgroup" data-type="horizontal" class="ui-btn-right">
+         	<input type="radio" name="radio-view" id="radio-view-a" checked value="all" data-mini="true" {{action "filter" on="change"}} />
+         	<label for="radio-view-a">All</label>
+         	<input type="radio" name="radio-view" id="radio-view-b" value="year" data-mini="true" {{action "filter" on="change"}} />
+         	<label for="radio-view-b">Year</label>
+         	<input type="radio" name="radio-view" id="radio-view-c" value="month" data-mini="true" {{action "filter" on="change"}} />
+         	<label for="radio-view-c">Month</label>
+	    </fieldset>
     {{/view}}
 
 
@@ -70,12 +63,13 @@
 		
     {{/view}}
      
-
     {{#view App.FooterView}}
-      <h3>We owe ${{App.entriesController.owed}} to charity.</h3>
+      	<h1>We owe ${{App.entriesController.owed}} to charity.</h1>
+		<a id="aboutTrigger" href="#about" data-icon="info" data-theme="b" data-rel="dialog" data-transition="pop" data-mini="true" class="ui-btn-right">About</a>
     {{/view}}
-
-  </script>
+	<!--<a href="#about" data-icon="info" data-theme="b" data-rel="dialog" data-transition="pop" data-mini="true" class="ui-block-e" style="position: fixed; right: 5px; bottom: 5px;">About</a>
+-->  
+</script>
 	
   <script type="text/x-handlebars" data-template-name="add">
 		<div data-role="header"><h1>Add Entry</h1></div> 
@@ -84,7 +78,7 @@
 			<label for="category">Category</label>
 			<select id="category" name="category">
 				<option>Income</option>
-				<option>Deductable</option>
+				<option>Deductible</option>
 				<option>Charity</option>
 		    </select>
 		    <label for="name">Name</label>
@@ -108,7 +102,7 @@
 		<label for="category">Category</label>
 		<select class="category" name="category">
 			<option {{bindAttr selected="content.isIncome"}}>Income</option>
-			<option {{bindAttr selected="content.isDeductable"}}>Deductable</option>
+			<option {{bindAttr selected="content.isDeductable"}}>Deductible</option>
 			<option {{bindAttr selected="content.isCharity"}}>Charity</option>
 	    </select>
 	
@@ -125,6 +119,24 @@
 		<a href="#main" data-role="button" data-theme="c">Cancel</a>
 	</div>
    </script>
+
+ <script type="text/x-handlebars" data-template-name="about">
+	<div data-role="header"><h1>About</h1></div>
+	<div data-role="content"> 
+		<p>Welcome to Maaser. The app that helps you tithe your income. Maaser is pretty simple. You create entries for financial transactions.</p>
+		<p>There are 3 types of entries:</p>
+		<ul>
+			<li><strong>Income</strong> - this is for any money that you make.</li>
+			<li><strong>Deductible</strong> - this is for money that should be subtracted from income. These are usually business expenses.</li>
+			<li><strong>Charity</strong> - this is for money that you have given to charity; it is subtracted from the money that you owe to charity</li>
+		</ul>
+		<p>To create an entry you click on the "Add Entry" button on the top left hand corner of the page. You will have to give the entry a name and a time. For example "Acme Inc. Paycheck" for "Jan 1, 2000".</p>
+		<p>To edit an entry you click on it.</p>
+		<p>To delete an entry click on the "X" next to the entry.</p>
+		<p>The list of entries can be filtered to show only entries from this month or this year. Use the buttons on the top right corner of the page.</p>
+		<p>The bottom of the page will show you how much you owe to charity. This is 10% of your net income (income minus deductibles) minus what you've already given to charity. It is calculated only for the entries shown in the entry list which are filtered as explained above.</p>
+	</div>
+</script>
 
 </body>
 </html>
